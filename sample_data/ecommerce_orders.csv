@@ -1,0 +1,31 @@
+order_id,order_date,product_name,category,region,quantity,sales,discount,profit
+ORD-1001,2024-01-15,UltraSharp 4K Monitor,Electronics,North,2,999.98,0.05,249.99
+ORD-1002,2024-01-18,Ergonomic Office Chair,Furniture,West,1,349.50,0.10,75.20
+ORD-1003,2024-01-22,Wireless Noise-Canceling Headphones,Electronics,East,3,599.97,0.15,120.00
+ORD-1004,2024-02-05,Mechanical Keyboard,Electronics,South,4,479.96,0.00,140.00
+ORD-1005,2024-02-12,Standing Desk,Furniture,North,1,650.00,0.20,85.00
+ORD-1006,2024-02-20,USB-C Multiport Adapter,Accessories,West,5,199.95,0.05,65.00
+ORD-1007,2024-03-01,Leather Notebook & Pen Set,Office Supplies,East,10,250.00,0.00,90.00
+ORD-1008,2024-03-10,UltraSharp 4K Monitor,Electronics,West,3,1499.97,0.10,320.00
+ORD-1009,2024-03-15,Smart LED Desk Lamp,Accessories,North,2,119.98,0.00,42.00
+ORD-1010,2024-03-22,High-Back Executive Chair,Furniture,South,2,799.98,0.25,95.00
+ORD-1011,2024-04-05,Wireless Noise-Canceling Headphones,Electronics,North,2,399.98,0.00,110.00
+ORD-1012,2024-04-12,Aluminum Laptop Stand,Accessories,South,4,199.96,0.10,55.00
+ORD-1013,2024-04-18,Gel Pen Pack 24-Count,Office Supplies,West,15,149.85,0.05,45.00
+ORD-1014,2024-04-25,Mechanical Keyboard,Electronics,East,2,239.98,0.00,70.00
+ORD-1015,2024-05-02,Standing Desk,Furniture,East,2,1300.00,0.15,190.00
+ORD-1016,2024-05-10,Ergonomic Office Chair,Furniture,North,3,1048.50,0.05,260.00
+ORD-1017,2024-05-18,UltraSharp 4K Monitor,Electronics,South,1,499.99,0.00,130.00
+ORD-1018,2024-05-24,Heavy Duty Paper Shredder,Office Supplies,North,1,220.00,0.30,15.00
+ORD-1019,2024-06-03,Wireless Trackball Mouse,Accessories,West,3,179.97,0.00,58.00
+ORD-1020,2024-06-11,Laser Color Printer,Electronics,East,1,550.00,0.15,95.00
+ORD-1021,2024-06-18,Leather Notebook & Pen Set,Office Supplies,South,8,200.00,0.00,72.00
+ORD-1022,2024-06-25,Smart LED Desk Lamp,Accessories,East,3,179.97,0.10,48.00
+ORD-1023,2024-07-04,Mechanical Keyboard,Electronics,North,3,359.97,0.05,98.00
+ORD-1024,2024-07-12,Standing Desk,Furniture,West,1,650.00,0.10,110.00
+ORD-1025,2024-07-20,UltraSharp 4K Monitor,Electronics,East,2,999.98,0.20,180.00
+ORD-1026,2024-07-28,Wireless Noise-Canceling Headphones,Electronics,West,4,799.96,0.10,210.00
+ORD-1027,2024-08-05,Aluminum Laptop Stand,Accessories,North,5,249.95,0.00,80.00
+ORD-1028,2024-08-14,High-Back Executive Chair,Furniture,East,1,399.99,0.05,105.00
+ORD-1029,2024-08-22,Ergonomic Footrest,Accessories,South,6,179.94,0.00,60.00
+ORD-1030,2024-08-30,Gel Pen Pack 24-Count,Office Supplies,North,20,199.80,0.10,50.00
