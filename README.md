@@ -16,10 +16,14 @@
 
 Watch the Natural-Language Data Analyst in action below:
 
-https://github.com/user-attachments/assets/demo_placeholder
+<p align="center">
+  <video src="NLDA.DEMO.mp4" controls="controls" muted="muted" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    Your browser does not support the video tag.
+  </video>
+</p>
 
-> 📹 **Video File:** You can also view or download the included high-resolution walkthrough directly:  
-> **[`demo_natural_language_data_analyst.mp4`](./demo_natural_language_data_analyst.mp4)**
+> 📹 **High-Definition Demo Video:**  
+> **[▶️ Click here to watch / download the demo video (`NLDA.DEMO.mp4`)](https://github.com/ashishh9090/natural-language-data-analyst/raw/main/NLDA.DEMO.mp4)**
 
 ### What you see in the demo:
 1. **Welcoming Exploration Workspace:** Starting with a clean empty state, quick-start sample datasets, and clear privacy disclosures.
@@ -127,7 +131,7 @@ nl-data-analyst/
 ├── pyproject.toml                  # Project packaging and test configuration
 ├── requirements.txt                # Production dependencies
 ├── .env.example                    # API key template (optional)
-├── demo_natural_language_data_analyst.mp4  # High-definition video walkthrough
+├── NLDA.DEMO.mp4                   # High-definition video walkthrough
 ├── record_demo_linkedin.py         # Automated recording script
 ├── sample_data/
 │   ├── ecommerce_orders.csv        # Realistic e-commerce sales dataset
