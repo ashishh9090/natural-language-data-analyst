@@ -34,3 +34,32 @@ def test_create_result_chart_not_needed():
     )
     fig = create_result_chart(result)
     assert fig is None
+
+
+def test_get_suitable_chart_types_and_override():
+    from nl_data_analyst.charts import get_suitable_chart_types
+
+    result = ExecutionResult(
+        success=True,
+        direct_answer="Sample answer",
+        method_explanation="Sample explanation",
+        data_records=[
+            {"category": "Electronics", "sales": 500.0},
+            {"category": "Furniture", "sales": 300.0},
+        ],
+        chart_spec=ChartSpec(
+            needed=True,
+            chart_type="bar",
+            x="category",
+            y="sales",
+            title="Sales by Category",
+        ),
+    )
+    suitable = get_suitable_chart_types(result)
+    assert "bar" in suitable
+    assert "pie" in suitable
+
+    # Test override
+    fig_pie = create_result_chart(result, override_chart_type="pie")
+    assert fig_pie is not None
+

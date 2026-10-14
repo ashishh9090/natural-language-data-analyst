@@ -1,174 +1,267 @@
 # 📊 Natural-Language Data Analyst
 
-A beginner-accessible, technically solid, and safe Natural-Language Data Analyst web application.
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit](https://img.shields.io/badge/frontend-Streamlit-FF4B4B.svg)](https://streamlit.io/)
+[![Plotly](https://img.shields.io/badge/charts-Plotly-3F4F75.svg)](https://plotly.com/)
+[![Pydantic v2](https://img.shields.io/badge/validation-Pydantic%20v2-e92063.svg)](https://docs.pydantic.dev/)
+[![Tests Passing](https://img.shields.io/badge/tests-30%20passed-success.svg)](https://github.com/ashishh9090)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Users upload any CSV file, ask analytical questions in plain English, and receive:
-1. **A direct, computed answer** derived strictly from data calculations.
-2. **An interactive Plotly visualization** when visual presentation aids understanding.
-3. **A transparent method explanation** highlighting the relevant columns and logic used.
-4. **Clear error handling & guidance** when data cannot support an answer or when assumptions must be qualified.
-
----
-
-## 🏛️ Architecture & Safety Guarantees
-
-```
-                   ┌───────────────────────────────┐
-                   │          User CSV             │
-                   └──────────────┬────────────────┘
-                                  │ (Safe Inspection & Profiling)
-                                  ▼
-                   ┌───────────────────────────────┐
-                   │ Compact Dataset Profile       │
-                   │ (Columns, types, nulls,       │
-                   │  2-3 bounded string samples)  │
-                   └──────────────┬────────────────┘
-                                  │
- User Question ───►  LLM / Heuristic Engine
-                                  │
-                                  ▼
-                   ┌───────────────────────────────┐
-                   │ Validated AnalysisPlan (JSON) │
-                   │ (Operation, columns, filters, │
-                   │  group_by, aggs, sort, chart) │
-                   └──────────────┬────────────────┘
-                                  │
-                                  ▼ Strict Schema Validation
-                   ┌───────────────────────────────┐
-                   │   Allowlist Execution Engine  │
-                   │  - Zero eval() / exec()       │
-                   │  - Deterministic Pandas ops   │
-                   │  - Causation ≠ Correlation    │
-                   └──────────────┬────────────────┘
-                                  │
-                                  ▼
-     ┌────────────────────────────────────────────────────────┐
-     │ Streamlit Interface:                                   │
-     │ 1. Direct answer card                                  │
-     │ 2. Interactive Plotly chart                            │
-     │ 3. Plain-English method & referenced columns           │
-     │ 4. Data integrity & incomplete data notes              │
-     └────────────────────────────────────────────────────────┘
-```
-
-### Safety & Correctness Principles:
-- **Zero Arbitrary Execution:** Model output is strictly constrained to a Pydantic `AnalysisPlan`. The application **never executes arbitrary Python code, eval(), exec(), SQL, or shell commands**.
-- **Data Privacy & Token Efficiency:** Raw dataset rows are **never** forwarded to external models. The LLM only sees a compact schema summary (column names, inferred types, null counts, and a bounded set of up to 3 sample string representations).
-- **Allowlist Operations:** Only documented operations are permitted: `count`, `sum`, `mean`, `median`, `min`, `max`, `nunique`, `std`, `value_counts`, `sorting`, `filtering`, `grouping`, and `correlation`.
-- **Statistical Integrity:** Correlation queries automatically include caveats stating that **correlation does not imply causation**.
-- **Data Quality Transparency:** Calculations explicitly document any omitted missing values (`null` / `NaN`), empty results, or constant-variance columns.
+> **Ask analytical questions about your CSV in plain English.**  
+> Get mathematically verified answers, interactive Plotly visualizations, transparent audit trails, and zero code-execution risk.
 
 ---
 
-## 📁 Project Structure
+## 🎬 Live Demo & Video Walkthrough
+
+Watch the Natural-Language Data Analyst in action below:
+
+https://github.com/user-attachments/assets/demo_placeholder
+
+> 📹 **Video File:** You can also view or download the included high-resolution walkthrough directly:  
+> **[`demo_natural_language_data_analyst.mp4`](./demo_natural_language_data_analyst.mp4)**
+
+### What you see in the demo:
+1. **Welcoming Exploration Workspace:** Starting with a clean empty state, quick-start sample datasets, and clear privacy disclosures.
+2. **Instant Dataset Profiling:** Uploading/selecting a dataset inspects row counts, column types, missing value percentages, and preview records in local memory.
+3. **Plain-English Questions:** Asking *"Which product had the highest revenue?"*, *"Show monthly sales for each region"*, and *"Are higher discounts associated with lower profit?"*.
+4. **Verified Answers & Interactive Charts:** Direct computed answers, responsive Plotly charts with on-the-fly chart type switching (Bar, Line, Scatter, Pie), and transparent *"How this was calculated"* cards with statistical honesty notes.
+
+---
+
+## 💡 Why We Built This (The Real Problem with AI Data Analysts)
+
+Most existing "chat with your data" tools suffer from two dangerous flaws:
+
+1. **The Code-Execution Trap (`eval()` / `exec()`):**  
+   Many tools ask an LLM to generate Python or SQL code and blindly execute it on your computer or database. This is a massive security hazard. Malformed questions or adversarial CSV contents can result in arbitrary code execution, disk corruption, or database leaks.
+2. **The Hallucination Trap & Arithmetic Blindness:**  
+   Language models are language engines, not calculators. When an LLM tries to compute totals, medians, or correlations in its head, it frequently hallucinates numbers, drops outliers, or invents convincing trends that don't exist.
+3. **Data Privacy Violations:**  
+   Sending entire rows of sensitive financial records or customer PII to external APIs is unacceptable for most teams and privacy regulations.
+
+### 🛡️ How Natural-Language Data Analyst Solves This
+
+This project uses a **strict separation of Planning and Execution**:
+
+- **The LLM is only an Intent Translator:** It reads your question and a compact summary of the table schema (column names and data types)—**never raw table rows**. It produces a strictly validated Pydantic `AnalysisPlan`.
+- **The Execution Engine is 100% Deterministic:** Plans execute through an **explicit allowlist of Pandas operations**. There is zero arbitrary code execution, zero `eval()`, zero `exec()`, and zero raw SQL.
+- **Answers are Calculated, Not Guessed:** Answers and charts are derived directly from the computed output of the data engine.
+- **Statistical Integrity:** If you ask about correlations, the app automatically flags that **correlation does not imply causation** and highlights missing-data omissions.
+
+---
+
+## ✨ Key Features
+
+| Feature | What It Does | Why It Matters |
+| :--- | :--- | :--- |
+| 💬 **Natural-Language Querying** | Translates questions like *"Top 5 categories by sales"* into structured analysis. | Accessible to non-technical stakeholders, product managers, and executives. |
+| 🔒 **Air-Gapped Privacy** | Raw table rows never leave your computer. Only schema column profiles are sent. | Safe for confidential corporate data and customer records. |
+| 🛡️ **100% Safe Execution** | Only documented operations allowed: `sum`, `mean`, `median`, `min`, `max`, `count`, `value_counts`, `filter`, `group_by`, `correlation`. | Zero arbitrary script execution or code injection vulnerabilities. |
+| 📊 **Interactive Visualizations** | Plotly charts generated automatically with an instant **Chart-Type Switcher** (Bar, Line, Scatter, Pie, Box, Histogram). | Switch visual representations on the fly without losing answers. |
+| 🔍 **Plain-English Audit Trail** | Every answer includes an expandable *"How your question was understood"* panel. | Eliminates black-box confusion; verify the math behind every number. |
+| ⚖️ **Honest Statistics** | Automatically warns about correlation vs. causation, empty subsets, and missing values. | Prevents misleading business decisions based on flawed interpretations. |
+| ⚡ **Built-In Offline Engine** | Comes with a rule-based heuristic planner that runs with **zero API keys**. | Works out of the box offline or connects to Gemini, OpenAI, or Claude. |
+| 📁 **Included Sample Datasets** | Pre-loaded with **E-Commerce Orders** and **SaaS Customer Metrics**. | Instant testing without having to hunt for sample CSV files. |
+
+---
+
+## 🏛️ Architecture & Data Flow
 
 ```
+                           ┌─────────────────────────────────────────┐
+                           │            User Uploads CSV             │
+                           └────────────────────┬────────────────────┘
+                                                │ Local Inspection & Profiling
+                                                ▼
+                           ┌─────────────────────────────────────────┐
+                           │      Compact Schema Profile             │
+                           │  - Column names & inferred types        │
+                           │  - Missing value counts & memory        │
+                           │  - 2-3 bounded string formats           │
+                           │  (ZERO raw data rows sent to LLM!)      │
+                           └────────────────────┬────────────────────┘
+                                                │
+   User Plain-English Question ─────────────────┼────────────────────────┐
+                                                ▼                        │
+                           ┌─────────────────────────────────────────┐   │
+                           │       Replaceable Planner Engine        │   │
+                           │   (Built-in Heuristic / Gemini /        │   │
+                           │    OpenAI / Claude)                     │   │
+                           └────────────────────┬────────────────────┘   │
+                                                │                        │
+                                                ▼                        │
+                           ┌─────────────────────────────────────────┐   │
+                           │       Pydantic AnalysisPlan (JSON)      │   │
+                           │   Operation, columns, filters, grouping,│   │
+                           │   aggregations, sorting, chart spec     │   │
+                           └────────────────────┬────────────────────┘   │
+                                                │                        │
+                                                ▼ Strict Schema Check    │
+                           ┌─────────────────────────────────────────┐   │
+                           │       Pandas Allowlist Executor         │   │
+                           │   - Runs only verified Pandas routines  │   │
+                           │   - Computes exact numbers & records    │   │
+                           │   - Handles NaNs & zero-variance safely │   │
+                           └────────────────────┬────────────────────┘   │
+                                                │                        │
+                                                ▼                        │
+ ┌───────────────────────────────────────────────────────────────────────┴──────────┐
+ │                          Polished Streamlit Workspace                            │
+ │  1. ⚡ Direct Computed Answer Card                                               │
+ │  2. 📊 Interactive Plotly Visualization (with Bar / Line / Pie / Scatter switch)  │
+ │  3. 🔍 Interpreted Plan Panel (Allowlist Verified ✅)                             │
+ │  4. 📖 Method & Data Health Notes (Correlation caveats & missing data flags)     │
+ │  5. 📋 Downloadable Result Records (CSV Export)                                  │
+ └──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📂 Project Structure
+
+```text
 nl-data-analyst/
-├── app.py                      # Streamlit UI & interactive dashboard
-├── pyproject.toml              # Project metadata & pytest configuration
-├── requirements.txt            # Core dependencies
-├── .env.example                # Configuration template for API keys
+├── app.py                          # Streamlit application workspace
+├── run.sh                          # 1-click launch script
+├── pyproject.toml                  # Project packaging and test configuration
+├── requirements.txt                # Production dependencies
+├── .env.example                    # API key template (optional)
+├── demo_natural_language_data_analyst.mp4  # High-definition video walkthrough
+├── record_demo_linkedin.py         # Automated recording script
 ├── sample_data/
-│   └── ecommerce_orders.csv    # Sample e-commerce dataset for quick testing
+│   ├── ecommerce_orders.csv        # Realistic e-commerce sales dataset
+│   └── saas_metrics.csv            # SaaS customer subscriptions & churn dataset
 ├── nl_data_analyst/
-│   ├── __init__.py             # Package init
-│   ├── models.py               # Pydantic schemas (AnalysisPlan, DatasetProfile, ExecutionResult)
-│   ├── data.py                 # Untrusted CSV ingestion, size check, safe profiling
-│   ├── planner.py              # Plan validation, schema enforcement, plain-English translation
-│   ├── executor.py             # Deterministic Pandas allowlist engine
-│   ├── charts.py               # Responsive Plotly chart generator
-│   └── llm.py                  # Pluggable LLM interface (Gemini, OpenAI, Anthropic, Mock)
+│   ├── __init__.py                 # Core package init
+│   ├── models.py                   # Pydantic schemas (AnalysisPlan, DatasetProfile, ExecutionResult)
+│   ├── data.py                     # Safe CSV loader, size guard (100MB), schema profiler
+│   ├── planner.py                  # Schema validation, question suggester, plan explainer
+│   ├── executor.py                 # Deterministic Pandas allowlist execution engine
+│   ├── charts.py                   # Plotly chart generator & dynamic chart switcher
+│   ├── llm.py                      # Multi-provider LLM interface (Offline, Gemini, OpenAI, Claude)
+│   └── ui/                         # Modular, accessible UI components
+│       ├── __init__.py             # UI module export
+│       ├── styles.py               # Modern analytics CSS tokens & responsive styles
+│       ├── header.py               # Header with active dataset status indicator
+│       ├── empty_state.py          # Welcoming empty state & sample data pickers
+│       ├── dataset_view.py         # Dimensions, health metrics, and 5-row preview
+│       ├── ask_bar.py              # Prominent input with dynamic suggestion chips
+│       ├── results_view.py         # Answers, charts, plan expander, and CSV download
+│       └── sidebar.py              # Model provider settings & safety audit panel
 └── tests/
-    ├── test_data.py            # CSV security & profiling tests
-    ├── test_planner.py         # Schema verification & validation tests
-    ├── test_executor.py        # Safe execution & statistical caveat tests
-    ├── test_charts.py          # Visualization tests
-    └── test_e2e_examples.py    # End-to-end evaluation on standard questions
+    ├── test_data.py                # File size limits, empty files, profiling tests
+    ├── test_planner.py             # Schema verification & heuristic planner tests
+    ├── test_executor.py            # Safe Pandas execution & statistical caveat tests
+    ├── test_charts.py              # Chart generator & chart switcher tests
+    ├── test_ui_components.py       # UI component function tests
+    └── test_e2e_examples.py        # End-to-end evaluation on standard analytical queries
 ```
 
 ---
 
-## 🚀 Quickstart & Setup
+## 🚀 Quick Start Guide (Ready in 2 Minutes)
 
-### Prerequisites
-- Python 3.11+
-- [uv](https://docs.astral.sh/uv/) (recommended) or standard `venv` + `pip`
-
-### 1. Clone & Set Up Virtual Environment
-
-Using `uv`:
+### 1. Clone the Repository
 ```bash
-# In the project directory:
-uv venv .venv
-source .venv/bin/activate
-uv pip install -r requirements.txt
+git clone https://github.com/ashishh9090/natural-language-data-analyst.git
+cd natural-language-data-analyst
 ```
 
-Or using standard `python3 -m venv`:
+### 2. Set Up Virtual Environment & Install Dependencies
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Configure API Keys (Optional)
+### 3. *(Optional)* Add LLM API Keys
+The application works **completely offline out of the box** using its built-in rule-based planning engine!
 
-The application includes an **Offline Heuristic Engine** out of the box so you can run and test queries immediately without any API keys or costs.
-
-To connect to Google Gemini, OpenAI, or Anthropic, create a `.env` file from the template:
+If you want to power it with a frontier LLM:
 ```bash
 cp .env.example .env
 ```
-Add your preferred key:
+Open `.env` and add your preferred provider key:
 ```env
-# Google Gemini
+# Choose any of the following:
 GEMINI_API_KEY=your_gemini_api_key_here
-
-# OR OpenAI
 OPENAI_API_KEY=your_openai_api_key_here
-
-# OR Anthropic
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
 ```
 
-### 3. Run the Web Application
-
+### 4. Launch the App
+You can use the convenient 1-click startup script:
 ```bash
+./run.sh
+```
+Or run directly with Streamlit:
+```bash
+source .venv/bin/activate
 streamlit run app.py
 ```
-Open your browser at `http://localhost:8501`.
+Your browser will open automatically at **`http://localhost:8501`**!
 
 ---
 
-## 🧪 Running Unit & Integration Tests
+## 💬 Example Questions to Try
 
-The test suite validates schema enforcement, safe execution, missing-value handling, correlation caveats, and end-to-end questions.
+### On E-Commerce Data (`ecommerce_orders.csv`):
+- *"Which product had the highest revenue?"*  
+  ➡️ **Result:** UltraSharp 4K Monitor ($4,499.91 across 4 orders)
+- *"Show monthly sales for each region"*  
+  ➡️ **Result:** Interactive grouped bar / line chart by month and region
+- *"Are higher discounts associated with lower profit?"*  
+  ➡️ **Result:** Pearson r calculation with an explicit disclaimer that *correlation does not imply causation*
+- *"What are the top five categories by order count?"*  
+  ➡️ **Result:** Value counts breakdown for categories
+
+### On SaaS Metrics Data (`saas_metrics.csv`):
+- *"What is the average satisfaction score by plan tier?"*  
+  ➡️ **Result:** Enterprise: 8.97, Professional: 7.85, Starter: 5.75
+- *"Is usage hours correlated with customer satisfaction?"*  
+  ➡️ **Result:** Strong positive correlation (r ≈ 0.88) with scatter trendline
+- *"How many customers churned per plan?"*  
+  ➡️ **Result:** Churn counts segmented by plan tier
+
+---
+
+## 🧪 Automated Testing & Verification
+
+The project includes an extensive automated test suite with **30 unit and end-to-end tests**:
 
 ```bash
-# Run all tests
+source .venv/bin/activate
 pytest -v
 ```
 
-All 27 tests run in under 2 seconds.
+### Test Coverage Highlights:
+- **Security & Upload Protection:** Rejection of non-CSV files, malformed headers, and files exceeding the 100MB limit.
+- **Strict Schema Enforcement:** Verification that queries referencing non-existent columns are gracefully caught before execution.
+- **Allowlist Execution:** Unit tests validating that aggregations (`sum`, `mean`, `median`, `min`, `max`), grouping, filtering, and value counts run cleanly.
+- **Statistical Honesty:** Verification that correlation routines attach the non-causation caveat and handle zero-variance columns without crashing.
+- **Dynamic Visualizations:** Testing chart creation and fallback logic across Bar, Line, Scatter, and Pie modes.
+- **End-to-End Consistency:** Validating that direct computed answers match ground truth mathematical results.
 
 ---
 
-## 💡 Example Questions
+## 🤝 Contributing
 
-Using the built-in sample dataset (`sample_data/ecommerce_orders.csv`):
-
-| Question | Interpretation | Output |
-| :--- | :--- | :--- |
-| **“Which product had the highest revenue?”** | Group by `product_name`, sum `sales`, sort desc, limit 1 | UltraSharp 4K Monitor ($3,999.92) + Bar chart |
-| **“Show monthly sales for each region.”** | Group by `order_date` & `region`, sum `sales` | Time series breakdown + Line chart |
-| **“Are higher discounts associated with lower profit?”** | Pearson correlation between `discount` and `profit` | Correlation coefficient, scatter plot + Causation warning |
-| **“What are the top five categories by order count?”** | Group by `category`, count orders, sort desc, limit 5 | Category breakdown + Bar chart |
+Contributions, feature suggestions, and feedback are always welcome!
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## ⚠️ Limitations & Boundary Conditions
+## 📄 License
 
-1. **Format Scope:** Currently optimized for tabular CSV data. Multi-sheet Excel workbooks, nested JSON, and databases require flattening to CSV prior to upload.
-2. **Tabular Modeling:** The planner performs single-table operations (grouping, filtering, ranking, aggregation, correlation). Multi-table SQL joins across multiple CSV files are not supported in this version.
-3. **Linear Association:** Correlation queries evaluate Pearson linear correlation. Non-linear relationships or multi-factor regression models require dedicated statistical modeling.
-4. **Token Limits:** Large datasets with more than 1,000 distinct columns will have column summaries truncated to preserve token efficiency.
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
+
+<p align="center">
+  Built with ❤️ for transparent, safe, and accessible data exploration.
+</p>

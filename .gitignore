@@ -38,3 +38,8 @@ htmlcov/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# OS & IDE
+.DS_Store
+.idea/
+.vscode/
